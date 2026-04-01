@@ -11,6 +11,15 @@ const CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 const WEBHOOK_SECRET = process.env.GITHUB_WEBHOOK_SECRET;
 
+// --- Serve static files ---
+app.use(express.static(path.join(__dirname, 'public')));
+
+// --- Homepage Endpoint ---
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+
 // --- OAuth Callback ---
 app.get('/auth/callback', async (req, res) => {
   const code = req.query.code;
