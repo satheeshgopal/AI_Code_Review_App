@@ -49,7 +49,7 @@ app.get('/auth/callback', async (req, res) => {
 });
 
 // --- Webhook Handler ---
-app.post('/webhook', (req, res) => {
+app.post('/webhook', async (req, res) => {
   const signature = req.headers['x-hub-signature-256'];
   const payload = JSON.stringify(req.body);
 
@@ -67,7 +67,9 @@ app.post('/webhook', (req, res) => {
 
   if(req.body.action== "opened")
   {
-    doCodeReview(req.body.number);
+    const installationId = process.env.GITHUB_INSTALLATION_ID; // set this in .env
+    const token = await getInstallationToken(installationId);
+    doCodeReview(token, req.body.number);
   }  
 
   res.status(200).send('Webhook received');
